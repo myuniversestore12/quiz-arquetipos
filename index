@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz de Arquétipos</title>
+<style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; margin: 0; padding: 20px; }
+    .container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #333; }
+    .question { margin-top: 15px; font-weight: bold; }
+    .answers { margin-top: 5px; }
+    .answers button { margin: 5px 5px 0 0; padding: 10px; border: none; border-radius: 5px; cursor: pointer; background-color: #4CAF50; color: white; }
+    .answers button:hover { background-color: #45a049; }
+    #result { margin-top: 20px; padding: 15px; background-color: #e8f5e9; border-radius: 8px; display: none; }
+    a { color: #4CAF50; text-decoration: none; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Qual arquétipo combina com você?</h1>
+
+    <div id="quiz">
+        <div class="question" data-index="0">1. Qual frase mais representa você hoje?</div>
+        <div class="answers">
+            <button data-arch="Cleópatra">O poder está em minhas mãos</button>
+            <button data-arch="Afrodite">O amor guia meus passos</button>
+            <button data-arch="Atena">A sabedoria é minha força</button>
+        </div>
+
+        <div class="question" data-index="1">2. Em qual cenário você se sente mais viva?</div>
+        <div class="answers">
+            <button data-arch="Cleópatra">Liderando e tomando decisões estratégicas</button>
+            <button data-arch="Afrodite">Vivendo intensamente emoções e conexões</button>
+            <button data-arch="Atena">Estudando, aprendendo e superando desafios</button>
+        </div>
+
+        <div class="question" data-index="2">3. Qual destas cores mais te atrai?</div>
+        <div class="answers">
+            <button data-arch="Cleópatra">Dourado e preto</button>
+            <button data-arch="Afrodite">Rosa e vermelho</button>
+            <button data-arch="Atena">Azul e branco</button>
+        </div>
+
+        <div class="question" data-index="3">4. Qual animal você mais se identifica?</div>
+        <div class="answers">
+            <button data-arch="Cleópatra">Leão</button>
+            <button data-arch="Afrodite">Pavão</button>
+            <button data-arch="Atena">Coruja</button>
+        </div>
+
+        <div class="question" data-index="4">5. Qual destas frases inspira você no momento?</div>
+        <div class="answers">
+            <button data-arch="Cleópatra">Controle meu destino e meu reino</button>
+            <button data-arch="Afrodite">Amar e ser amado é minha energia</button>
+            <button data-arch="Atena">Aprender é minha força</button>
+        </div>
+
+        <div class="question" data-index="5">6. Como você prefere passar seu tempo livre?</div>
+        <div class="answers">
+            <button data-arch="Cleópatra">Planejando e organizando metas</button>
+            <button data-arch="Afrodite">Conectando-se com pessoas queridas</button>
+            <button data-arch="Atena">Estudando ou explorando novos conhecimentos</button>
+        </div>
+    </div>
+
+    <div id="result"></div>
+</div>
+
+<script>
+const buttons = document.querySelectorAll(".answers button");
+const resultDiv = document.getElementById("result");
+let scores = { "Cleópatra":0, "Afrodite":0, "Atena":0 };
+
+buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const arch = btn.getAttribute("data-arch");
+        scores[arch]++;
+        const parent = btn.parentElement.nextElementSibling;
+        if(parent) parent.scrollIntoView({behavior:"smooth"});
+        btn.parentElement.style.display = "none";
+
+        // Se acabou todas perguntas, mostra resultado
+        if(document.querySelectorAll(".answers:not([style*='display: none'])").length === 0){
+            showResult();
+        }
+    });
+});
+
+function showResult(){
+    let max = 0, winner = "";
+    for(const key in scores){
+        if(scores[key] > max){
+            max = scores[key];
+            winner = key;
+        }
+    }
+    let explanation = "";
+    if(winner === "Cleópatra"){
+        explanation = "Você é estratégica, poderosa e confiante. O arquétipo Cleópatra combina com sua força e liderança natural. Veja a peça da coleção: <a href='#'>Pingente Cleópatra</a>";
+    } else if(winner === "Afrodite"){
+        explanation = "Você é amorosa, encantadora e valoriza emoções e beleza. O arquétipo Afrodite combina com sua energia e sensibilidade. Veja a peça da coleção: <a href='#'>Colar Afrodite</a>";
+    } else if(winner === "Atena"){
+        explanation = "Você é sábia, racional e valoriza conhecimento. O arquétipo Atena combina com sua mente estratégica. Veja a peça da coleção: <a href='#'>Pulseira Atena</a>";
+    }
+    resultDiv.innerHTML = `<h2>Seu arquétipo é ${winner}!</h2><p>${explanation}</p>`;
+    resultDiv.style.display = "block";
+    resultDiv.scrollIntoView({behavior:"smooth"});
+}
+</script>
+
+</body>
+</html>
