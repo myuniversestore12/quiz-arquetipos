@@ -1,50 +1,123 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landing Page</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
-        header { background: #6a1b9a; color: white; padding: 20px 0; text-align: center; }
-        header h1 { margin: 0; font-size: 2.5em; }
-        .container { width: 80%; margin: auto; overflow: hidden; padding: 20px; }
-        .cta-button { display: inline-block; padding: 10px 20px; background: #ff4081; color: white; text-decoration: none; border-radius: 5px; }
-        .cta-button:hover { background: #f50057; }
-        section { background: white; margin: 20px 0; padding: 20px; border-radius: 8px; }
-        footer { background: #6a1b9a; color: white; text-align: center; padding: 10px; position: fixed; bottom: 0; width: 100%; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz de Arquétipos</title>
+<style>
+    body { font-family: Arial, sans-serif; background: #f4f0ec; padding: 20px; }
+    h1 { text-align: center; color: #5a3e2b; }
+    .question { margin: 20px 0; padding: 15px; background: #fff; border-radius: 10px; }
+    .options button {
+        display: block; width: 100%; margin: 5px 0; padding: 10px;
+        border: none; border-radius: 8px; background: #e2d1c3; color: #333;
+        font-size: 16px; cursor: pointer; transition: 0.3s;
+    }
+    .options button:hover { background: #d0b49f; }
+    .result { margin-top: 30px; padding: 20px; background: #fff3e0; border-radius: 10px; }
+</style>
 </head>
 <body>
-    <header>
-        <h1>Bem-vindo à Minha Landing Page</h1>
-        <p>Converta visitantes em clientes com uma página incrível</p>
-    </header>
 
-    <div class="container">
-        <section>
-            <h2>Sobre o Produto</h2>
-            <p>Nosso produto é projetado para ajudar você a alcançar seus objetivos com eficiência e estilo.</p>
-        </section>
+<h1>Descubra seu Arquétipo</h1>
 
-        <section>
-            <h2>Benefícios</h2>
-            <ul>
-                <li>Alta qualidade</li>
-                <li>Preço acessível</li>
-                <li>Entrega rápida</li>
-            </ul>
-        </section>
+<div id="quiz"></div>
+<div id="result"></div>
 
-        <section>
-            <h2>Entre em Contato</h2>
-            <p>Quer saber mais? Clique no botão abaixo!</p>
-            <a href="https://wa.me/seunumerodetelefone" target="_blank" class="cta-button">Fale Conosco no WhatsApp</a>
-        </section>
-    </div>
+<script>
+const questions = [
+    {
+        text: "Como você prefere ser lembrada?",
+        options: [
+            { text: "Pela minha beleza e magnetismo", archetype: "Afrodite" },
+            { text: "Pelo meu poder e liderança", archetype: "Cleópatra" },
+            { text: "Pela minha sabedoria e estratégia", archetype: "Atena" }
+        ]
+    },
+    {
+        text: "Qual cenário te atrai mais?",
+        options: [
+            { text: "Um encontro romântico à luz de velas", archetype: "Afrodite" },
+            { text: "Um evento onde todos notam sua presença imponente", archetype: "Cleópatra" },
+            { text: "Um debate onde sua inteligência se destaca", archetype: "Atena" }
+        ]
+    },
+    {
+        text: "Qual é a sua maior força?",
+        options: [
+            { text: "Minha sensualidade e charme", archetype: "Afrodite" },
+            { text: "Minha determinação e influência", archetype: "Cleópatra" },
+            { text: "Minha lógica e conhecimento", archetype: "Atena" }
+        ]
+    },
+    {
+        text: "Como você prefere passar seu tempo livre?",
+        options: [
+            { text: "Conectando-se com pessoas queridas", archetype: "Afrodite" },
+            { text: "Planejando e tomando decisões estratégicas", archetype: "Cleópatra" },
+            { text: "Estudando ou explorando novos conhecimentos", archetype: "Atena" }
+        ]
+    },
+    {
+        text: "Qual frase te inspira neste momento?",
+        options: [
+            { text: "Amar e ser amada é minha energia", archetype: "Afrodite" },
+            { text: "O controle do meu destino é meu poder", archetype: "Cleópatra" },
+            { text: "Aprender é minha força", archetype: "Atena" }
+        ]
+    }
+];
 
-    <footer>
-        <p>&copy; 2025 Minha Empresa. Todos os direitos reservados.</p>
-    </footer>
+const quizContainer = document.getElementById("quiz");
+let scores = { Afrodite: 0, Cleópatra: 0, Atena: 0 };
+let currentQuestion = 0;
+
+function showQuestion() {
+    if (currentQuestion < questions.length) {
+        let q = questions[currentQuestion];
+        quizContainer.innerHTML = `
+            <div class="question">
+                <h3>${q.text}</h3>
+                <div class="options">
+                    ${q.options.map(opt => `<button onclick="selectOption('${opt.archetype}')">${opt.text}</button>`).join("")}
+                </div>
+            </div>
+        `;
+    } else {
+        showResult();
+    }
+}
+
+function selectOption(archetype) {
+    scores[archetype]++;
+    currentQuestion++;
+    showQuestion();
+}
+
+function showResult() {
+    let best = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+    let desc = {
+        Afrodite: "Você é Afrodite: sedutora, encantadora e movida pela beleza e pelo amor.",
+        Cleópatra: "Você é Cleópatra: poderosa, estratégica e com presença marcante.",
+        Atena: "Você é Atena: sábia, inteligente e guiada pela razão."
+    };
+    let link = {
+        Afrodite: "https://seusite.com/afrodite",
+        Cleópatra: "https://seusite.com/cleopatra",
+        Atena: "https://seusite.com/atena"
+    };
+    document.getElementById("result").innerHTML = `
+        <div class="result">
+            <h2>${best}</h2>
+            <p>${desc[best]}</p>
+            <a href="${link[best]}" target="_blank">Ver peça da coleção ${best}</a>
+        </div>
+    `;
+    quizContainer.innerHTML = "";
+}
+
+showQuestion();
+</script>
+
 </body>
 </html>
