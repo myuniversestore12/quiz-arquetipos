@@ -24,10 +24,9 @@
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         max-width: 600px;
     }
-    .options button {
-        display: block; 
-        width: 100%; 
-        margin: 8px 0; 
+    .options label {
+        display: block;
+        margin: 8px 0;
         padding: 12px;
         border: 2px solid #d9c3a7; 
         border-radius: 8px; 
@@ -38,9 +37,26 @@
         cursor: pointer; 
         transition: all 0.3s ease;
     }
-    .options button:hover { 
+    .options label:hover { 
         background: #e3d4c3; 
         border-color: #c7a878;
+    }
+    button {
+        display: block;
+        width: 100%;
+        margin: 30px auto;
+        padding: 15px;
+        background: #c7a878;
+        color: white;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        max-width: 600px;
+    }
+    button:hover {
+        background: #a98965;
     }
     .result { 
         margin-top: 40px; 
@@ -71,112 +87,113 @@
 
 <h1>Descubra seu Arquétipo</h1>
 
-<div id="quiz"></div>
+<form id="quizForm">
+    <div class="question">
+        <h3>O que te motiva a agir mesmo nos momentos mais difíceis?</h3>
+        <div class="options">
+            <label><input type="radio" name="q1" value="Atena"> O desejo de inspirar e proteger quem amo</label>
+            <label><input type="radio" name="q1" value="Cleópatra"> A necessidade de manter meu poder e influência</label>
+            <label><input type="radio" name="q1" value="Afrodite"> A busca por experiências intensas e apaixonantes</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>Em um ambiente novo, qual é sua primeira reação?</h3>
+        <div class="options">
+            <label><input type="radio" name="q2" value="Atena"> Observar, analisar e entender as dinâmicas</label>
+            <label><input type="radio" name="q2" value="Afrodite"> Criar conexões emocionais e relações marcantes</label>
+            <label><input type="radio" name="q2" value="Cleópatra"> Assumir a liderança e chamar atenção</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>O que mais te faz sentir realizada?</h3>
+        <div class="options">
+            <label><input type="radio" name="q3" value="Atena"> Aprender algo novo e aplicar minha sabedoria</label>
+            <label><input type="radio" name="q3" value="Afrodite"> Viver momentos de amor e conexão profunda</label>
+            <label><input type="radio" name="q3" value="Cleópatra"> Ter o controle e conquistar minhas metas</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>Qual destas frases ressoa mais com você?</h3>
+        <div class="options">
+            <label><input type="radio" name="q4" value="Cleópatra"> O poder pertence a quem sabe usá-lo</label>
+            <label><input type="radio" name="q4" value="Atena"> O conhecimento é a minha maior arma</label>
+            <label><input type="radio" name="q4" value="Afrodite"> Meu coração guia minhas escolhas</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>Como você lida com desafios inesperados?</h3>
+        <div class="options">
+            <label><input type="radio" name="q5" value="Afrodite"> Seguindo minha intuição e adaptando-me com charme</label>
+            <label><input type="radio" name="q5" value="Cleópatra"> Assumindo o controle e tomando decisões firmes</label>
+            <label><input type="radio" name="q5" value="Atena"> Usando minha capacidade de pensar rápido e estrategicamente</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>Se fosse uma personagem histórica, qual seria seu papel?</h3>
+        <div class="options">
+            <label><input type="radio" name="q6" value="Cleópatra"> A rainha influente que move impérios</label>
+            <label><input type="radio" name="q6" value="Afrodite"> A musa inspiradora que transforma corações</label>
+            <label><input type="radio" name="q6" value="Atena"> A conselheira sábia que orienta grandes líderes</label>
+        </div>
+    </div>
+
+    <div class="question">
+        <h3>Qual qualidade as pessoas mais admiram em você?</h3>
+        <div class="options">
+            <label><input type="radio" name="q7" value="Afrodite"> Seu charme e capacidade de inspirar</label>
+            <label><input type="radio" name="q7" value="Atena"> Sua sabedoria e bom senso</label>
+            <label><input type="radio" name="q7" value="Cleópatra"> Sua força e determinação</label>
+        </div>
+    </div>
+
+    <button type="button" onclick="calcularResultado()">Ver Resultado</button>
+</form>
+
 <div id="result"></div>
 
 <script>
-const questions = [
-    {
-        text: "O que te motiva a agir mesmo nos momentos mais difíceis?",
-        options: [
-            { text: "O desejo de inspirar e proteger quem amo", archetype: "Atena" },
-            { text: "A necessidade de manter meu poder e influência", archetype: "Cleópatra" },
-            { text: "A busca por experiências intensas e apaixonantes", archetype: "Afrodite" }
-        ]
-    },
-    {
-        text: "Em um ambiente novo, qual é sua primeira reação?",
-        options: [
-            { text: "Observar, analisar e entender as dinâmicas", archetype: "Atena" },
-            { text: "Assumir a liderança e chamar atenção", archetype: "Cleópatra" },
-            { text: "Criar conexões emocionais e relações marcantes", archetype: "Afrodite" }
-        ]
-    },
-    {
-        text: "O que mais te faz sentir realizada?",
-        options: [
-            { text: "Ter o controle e conquistar minhas metas", archetype: "Cleópatra" },
-            { text: "Aprender algo novo e aplicar minha sabedoria", archetype: "Atena" },
-            { text: "Viver momentos de amor e conexão profunda", archetype: "Afrodite" }
-        ]
-    },
-    {
-        text: "Qual destas frases ressoa mais com você?",
-        options: [
-            { text: "Meu coração guia minhas escolhas", archetype: "Afrodite" },
-            { text: "O poder pertence a quem sabe usá-lo", archetype: "Cleópatra" },
-            { text: "O conhecimento é a minha maior arma", archetype: "Atena" }
-        ]
-    },
-    {
-        text: "Como você lida com desafios inesperados?",
-        options: [
-            { text: "Usando minha capacidade de pensar rápido e estrategicamente", archetype: "Atena" },
-            { text: "Assumindo o controle e tomando decisões firmes", archetype: "Cleópatra" },
-            { text: "Seguindo minha intuição e adaptando-me com charme", archetype: "Afrodite" }
-        ]
-    },
-    {
-        text: "Se fosse uma personagem histórica, qual seria seu papel?",
-        options: [
-            { text: "A conselheira sábia que orienta grandes líderes", archetype: "Atena" },
-            { text: "A rainha influente que move impérios", archetype: "Cleópatra" },
-            { text: "A musa inspiradora que transforma corações", archetype: "Afrodite" }
-        ]
+function calcularResultado() {
+    let scores = { Afrodite: 0, Cleópatra: 0, Atena: 0 };
+    let form = document.getElementById("quizForm");
+    let dados = new FormData(form);
+    let totalPerguntas = 7;
+
+    for (let [name, value] of dados) {
+        scores[value]++;
     }
-];
 
-const quizContainer = document.getElementById("quiz");
-let scores = { Afrodite: 0, Cleópatra: 0, Atena: 0 };
-let currentQuestion = 0;
-
-function showQuestion() {
-    if (currentQuestion < questions.length) {
-        let q = questions[currentQuestion];
-        // embaralhar opções
-        let shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
-        quizContainer.innerHTML = `
-            <div class="question">
-                <h3>${q.text}</h3>
-                <div class="options">
-                    ${shuffledOptions.map(opt => `<button onclick="selectOption('${opt.archetype}')">${opt.text}</button>`).join("")}
-                </div>
-            </div>
-        `;
-    } else {
-        showResult();
+    if (dados.entries().next().done || dados.keys().size < totalPerguntas) {
+        if ([...dados.keys()].length < totalPerguntas) {
+            alert("Responda todas as perguntas!");
+            return;
+        }
     }
-}
 
-function selectOption(archetype) {
-    scores[archetype]++;
-    currentQuestion++;
-    showQuestion();
-}
-
-function showResult() {
-    let best = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-    let desc = {
+    let vencedor = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+    let descricoes = {
         Afrodite: "Você é Afrodite: sedutora, encantadora e movida pela beleza e pelo amor.",
         Cleópatra: "Você é Cleópatra: poderosa, estratégica e com presença marcante.",
         Atena: "Você é Atena: sábia, inteligente e guiada pela razão."
     };
-    let link = {
+    let links = {
         Afrodite: "https://seusite.com/afrodite",
         Cleópatra: "https://seusite.com/cleopatra",
         Atena: "https://seusite.com/atena"
     };
+
     document.getElementById("result").innerHTML = `
         <div class="result">
-            <h2>${best}</h2>
-            <p>${desc[best]}</p>
-            <a href="${link[best]}" target="_blank">Ver peça da coleção ${best}</a>
+            <h2>${vencedor}</h2>
+            <p>${descricoes[vencedor]}</p>
+            <a href="${links[vencedor]}" target="_blank">Ver peça da coleção ${vencedor}</a>
         </div>
     `;
-    quizContainer.innerHTML = "";
 }
-
-showQuestion();
 </script>
 
 </body>
