@@ -1,50 +1,298 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landing Page</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
-        header { background: #6a1b9a; color: white; padding: 20px 0; text-align: center; }
-        header h1 { margin: 0; font-size: 2.5em; }
-        .container { width: 80%; margin: auto; overflow: hidden; padding: 20px; }
-        .cta-button { display: inline-block; padding: 10px 20px; background: #ff4081; color: white; text-decoration: none; border-radius: 5px; }
-        .cta-button:hover { background: #f50057; }
-        section { background: white; margin: 20px 0; padding: 20px; border-radius: 8px; }
-        footer { background: #6a1b9a; color: white; text-align: center; padding: 10px; position: fixed; bottom: 0; width: 100%; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quiz de Arquétipos - My Universe Store</title>
+  <meta name="description" content="Descubra qual arquétipo te representa: Afrodite, Cleópatra ou Atena." />
+  <style>
+    /* Paleta da marca */
+    :root {
+      --marrom: #8b5336;  /* texto principal */
+      --bege:   #f6f5f2;  /* fundo */
+      --marrom-escuro: #6e3f28;
+      --borda-suave: rgba(0,0,0,0.08);
+      --white: #ffffff;
+    }
+
+    /* Tipografia minimalista e legível (só fontes do sistema, sem CDN) */
+    html, body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bege);
+      color: var(--marrom);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      padding: 24px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 10px auto 24px;
+      font-weight: 700;
+    }
+
+    .question {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 4px 16px var(--borda-suave);
+      padding: 18px;
+      margin: 16px 0;
+    }
+
+    .question h3 {
+      margin: 0 0 12px 0;
+      font-size: 18px;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    /* Tornamos todo o label clicável e bonito */
+    .options label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 2px solid var(--marrom);
+      border-radius: 10px;
+      background: var(--bege);
+      cursor: pointer;
+      transition: transform .06s ease, background .25s ease;
+      user-select: none;
+    }
+
+    .options label:hover { background: #efece7; }
+    .options label:active { transform: scale(0.995); }
+
+    /* Esconde o radio visualmente mas mantém acessível */
+    .options input[type="radio"] {
+      appearance: none;
+      width: 18px; height: 18px; min-width: 18px;
+      border: 2px solid var(--marrom);
+      border-radius: 50%;
+      position: relative;
+      outline: none;
+      display: inline-block;
+      background: #fff;
+    }
+    .options input[type="radio"]:checked::after {
+      content: "";
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 8px; height: 8px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: var(--marrom);
+    }
+
+    /* Destaque visual da opção selecionada */
+    .options label.selected { background: #efe6e0; border-color: var(--marrom-escuro); }
+
+    .actions {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 18px;
+      background: var(--marrom);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background .25s ease, transform .06s ease;
+    }
+    .btn:hover { background: var(--marrom-escuro); }
+    .btn:active { transform: translateY(1px); }
+
+    .result {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 4px 16px var(--borda-suave);
+      padding: 20px;
+      margin: 24px 0;
+    }
+
+    .result a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: var(--marrom);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+    }
+    .result a:hover { background: var(--marrom-escuro); }
+
+    .muted { color: #7a6a5f; font-size: 14px; }
+
+    .footer { text-align: center; margin: 20px 0 40px; font-size: 13px; }
+
+    noscript {
+      display: block;
+      max-width: 760px;
+      margin: 12px auto;
+      background: #fff3cd;
+      color: #664d03;
+      border: 1px solid #ffecb5;
+      padding: 12px 14px;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Bem-vindo à Minha Landing Page</h1>
-        <p>Converta visitantes em clientes com uma página incrível</p>
-    </header>
+  <div class="container">
+    <h1>Descubra seu Arquétipo</h1>
 
-    <div class="container">
-        <section>
-            <h2>Sobre o Produto</h2>
-            <p>Nosso produto é projetado para ajudar você a alcançar seus objetivos com eficiência e estilo.</p>
-        </section>
+    <noscript>Este quiz precisa de JavaScript para funcionar. Ative o JavaScript no seu navegador.</noscript>
 
-        <section>
-            <h2>Benefícios</h2>
-            <ul>
-                <li>Alta qualidade</li>
-                <li>Preço acessível</li>
-                <li>Entrega rápida</li>
-            </ul>
-        </section>
+    <form id="quizForm" novalidate>
+      <!-- 1 -->
+      <div class="question">
+        <h3>O que te motiva a agir mesmo nos momentos mais difíceis?</h3>
+        <div class="options">
+          <label><input type="radio" name="q1" value="Atena" required> <span>O desejo de inspirar e proteger quem amo</span></label>
+          <label><input type="radio" name="q1" value="Cleópatra" required> <span>A necessidade de manter meu poder e influência</span></label>
+          <label><input type="radio" name="q1" value="Afrodite" required> <span>A busca por experiências intensas e apaixonantes</span></label>
+        </div>
+      </div>
 
-        <section>
-            <h2>Entre em Contato</h2>
-            <p>Quer saber mais? Clique no botão abaixo!</p>
-            <a href="https://wa.me/seunumerodetelefone" target="_blank" class="cta-button">Fale Conosco no WhatsApp</a>
-        </section>
-    </div>
+      <!-- 2 -->
+      <div class="question">
+        <h3>Em um ambiente novo, qual é sua primeira reação?</h3>
+        <div class="options">
+          <label><input type="radio" name="q2" value="Atena" required> <span>Observar, analisar e entender as dinâmicas</span></label>
+          <label><input type="radio" name="q2" value="Afrodite" required> <span>Criar conexões emocionais e relações marcantes</span></label>
+          <label><input type="radio" name="q2" value="Cleópatra" required> <span>Assumir a liderança e chamar atenção</span></label>
+        </div>
+      </div>
 
-    <footer>
-        <p>&copy; 2025 Minha Empresa. Todos os direitos reservados.</p>
-    </footer>
+      <!-- 3 -->
+      <div class="question">
+        <h3>O que mais te faz sentir realizada?</h3>
+        <div class="options">
+          <label><input type="radio" name="q3" value="Atena" required> <span>Aprender algo novo e aplicar minha sabedoria</span></label>
+          <label><input type="radio" name="q3" value="Afrodite" required> <span>Viver momentos de amor e conexão profunda</span></label>
+          <label><input type="radio" name="q3" value="Cleópatra" required> <span>Ter o controle e conquistar minhas metas</span></label>
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="question">
+        <h3>Qual destas frases ressoa mais com você?</h3>
+        <div class="options">
+          <label><input type="radio" name="q4" value="Cleópatra" required> <span>O poder pertence a quem sabe usá-lo</span></label>
+          <label><input type="radio" name="q4" value="Atena" required> <span>O conhecimento é a minha maior arma</span></label>
+          <label><input type="radio" name="q4" value="Afrodite" required> <span>Meu coração guia minhas escolhas</span></label>
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="question">
+        <h3>Como você lida com desafios inesperados?</h3>
+        <div class="options">
+          <label><input type="radio" name="q5" value="Afrodite" required> <span>Seguindo minha intuição e adaptando-me com charme</span></label>
+          <label><input type="radio" name="q5" value="Cleópatra" required> <span>Assumindo o controle e tomando decisões firmes</span></label>
+          <label><input type="radio" name="q5" value="Atena" required> <span>Usando minha capacidade de pensar rápido e estrategicamente</span></label>
+        </div>
+      </div>
+
+      <!-- 6 -->
+      <div class="question">
+        <h3>Se fosse uma personagem histórica, qual seria seu papel?</h3>
+        <div class="options">
+          <label><input type="radio" name="q6" value="Cleópatra" required> <span>A rainha influente que move impérios</span></label>
+          <label><input type="radio" name="q6" value="Afrodite" required> <span>A musa inspiradora que transforma corações</span></label>
+          <label><input type="radio" name="q6" value="Atena" required> <span>A conselheira sábia que orienta grandes líderes</span></label>
+        </div>
+      </div>
+
+      <!-- 7 -->
+      <div class="question">
+        <h3>Qual qualidade as pessoas mais admiram em você?</h3>
+        <div class="options">
+          <label><input type="radio" name="q7" value="Afrodite" required> <span>Seu charme e capacidade de inspirar</span></label>
+          <label><input type="radio" name="q7" value="Atena" required> <span>Sua sabedoria e bom senso</span></label>
+          <label><input type="radio" name="q7" value="Cleópatra" required> <span>Sua força e determinação</span></label>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="submitBtn" class="btn" type="submit">Ver Resultado</button>
+      </div>
+    </form>
+
+    <div id="result" class="result" style="display:none;" aria-live="polite"></div>
+
+    <p class="footer muted">My Universe Store • Quiz de Arquétipos</p>
+  </div>
+
+  <script>
+    (function() {
+      const form = document.getElementById('quizForm');
+      const resultBox = document.getElementById('result');
+
+      // Realça visualmente a opção selecionada (classe .selected no label)
+      document.querySelectorAll('.options').forEach(group => {
+        group.addEventListener('change', (e) => {
+          if (e.target && e.target.matches('input[type="radio"]')) {
+            // remove seleção prévia
+            group.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+            // adiciona na label atual
+            const lbl = e.target.closest('label');
+            if (lbl) lbl.classList.add('selected');
+          }
+        });
+      });
+
+      form.addEventListener('submit', function(ev) {
+        ev.preventDefault();
+        // Validação nativa do HTML5
+        if (!form.reportValidity()) return;
+
+        const scores = { 'Afrodite': 0, 'Cleópatra': 0, 'Atena': 0 };
+        const totalPerguntas = 7;
+
+        for (let i = 1; i <= totalPerguntas; i++) {
+          const marcado = form.querySelector(`input[name="q${i}"]:checked`);
+          if (marcado) scores[marcado.value]++;
+        }
+
+        const vencedor = Object.keys(scores).reduce((a, b) => scores[a] >= scores[b] ? a : b);
+
+        const descricoes = {
+          'Afrodite':  'Você é Afrodite: sedutora, encantadora e movida pela beleza e pelo amor.',
+          'Cleópatra': 'Você é Cleópatra: poderosa, estratégica e com presença marcante.',
+          'Atena':     'Você é Atena: sábia, inteligente e guiada pela razão.'
+        };
+
+        const links = {
+          // Substitua cada valor por seu link final da peça correspondente
+          'Afrodite':  '#link-afrodite',
+          'Cleópatra': '#link-cleopatra',
+          'Atena':     '#link-atena'
+        };
+
+        resultBox.style.display = 'block';
+        resultBox.innerHTML = `
+          <h2>${vencedor}</h2>
+          <p>${descricoes[vencedor]}</p>
+          <a href="${links[vencedor]}" target="_blank" rel="noopener">Ver peça da coleção ${vencedor}</a>
+        `;
+        // rolar suavemente até o resultado
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    })();
+  </script>
 </body>
 </html>
