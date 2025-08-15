@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Arquétipos - My Universe Store</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f5f2;
+            color: #3e2723;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .quiz-container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #8b5336;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #8b5336;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #6f402a;
+        }
+        .result {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f6f5f2;
+        }
+        .hidden {
+            display: none;
+        }
+        .option {
+            background: #f6f5f2;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background: #eae6df;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>Descubra seu Arquétipo</h1>
+    <div id="quiz"></div>
+    <div id="result" class="result hidden"></div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "O que te motiva a agir mesmo nos momentos mais difíceis?",
+            options: ["Amor e conexões", "Desejo de poder", "Busca por sabedoria"],
+            archetypes: ["Afrodite", "Cleópatra", "Atena"]
+        },
+        {
+            question: "Em um ambiente novo, qual é sua primeira reação?",
+            options: ["Fazer conexões", "Assumir a liderança", "Observar e analisar"],
+            archetypes: ["Afrodite", "Cleópatra", "Atena"]
+        },
+        {
+            question: "O que mais te faz sentir realizada?",
+            options: ["Viver intensamente o amor", "Conquistar e influenciar", "Aprender e compartilhar conhecimento"],
+            archetypes: ["Afrodite", "Cleópatra", "Atena"]
+        },
+        {
+            question: "Qual destas frases ressoa mais com você?",
+            options: ["O amor move o mundo", "O poder molda destinos", "O conhecimento é poder"],
+            archetypes: ["Afrodite", "Cleópatra", "Atena"]
+        },
+        {
+            question: "Como você lida com desafios inesperados?",
+            options: ["Com empatia", "Com estratégia", "Com lógica"],
+            archetypes: ["Afrodite", "Cleópatra", "Atena"]
+        },
+        {
+            question: "Se fosse uma personagem histórica, qual seria seu papel?",
+            options: ["Inspirar romances e artes", "Governar e liderar", "Descobrir e ensinar"],
+            archetypes: ["Afrodite", "Cleópatra", "Atena"]
+        },
+        {
+            question: "Qual qualidade as pessoas mais admiram em você?",
+            options: ["Sensibilidade", "Determinação", "Inteligência"],
+            archetypes: ["Afrodite", "Cleópatra", "Atena"]
+        }
+    ];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    let currentQuestion = 0;
+    let scores = { "Afrodite": 0, "Cleópatra": 0, "Atena": 0 };
+
+    const quizContainer = document.getElementById("quiz");
+    const resultContainer = document.getElementById("result");
+
+    shuffle(questions);
+
+    function showQuestion() {
+        const q = questions[currentQuestion];
+        quizContainer.innerHTML = `
+            <div class="question"><strong>${q.question}</strong></div>
+            ${q.options.map((opt, index) => `<div class="option" onclick="selectOption('${q.archetypes[index]}')">${opt}</div>`).join("")}
+        `;
+    }
+
+    function selectOption(archetype) {
+        scores[archetype]++;
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            showQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        let highestScore = 0;
+        let selectedArchetype = "";
+        for (let archetype in scores) {
+            if (scores[archetype] > highestScore) {
+                highestScore = scores[archetype];
+                selectedArchetype = archetype;
+            }
+        }
+
+        let description = "";
+        if (selectedArchetype === "Afrodite") {
+            description = "Você é guiada pelo amor e pela beleza. Afrodite representa paixão, conexões profundas e intensidade emocional.";
+        } else if (selectedArchetype === "Cleópatra") {
+            description = "Você é estrategista e poderosa. Cleópatra simboliza liderança, influência e magnetismo pessoal.";
+        } else if (selectedArchetype === "Atena") {
+            description = "Você é sábia e justa. Atena representa inteligência, lógica e a busca por conhecimento.";
+        }
+
+        quizContainer.classList.add("hidden");
+        resultContainer.classList.remove("hidden");
+        resultContainer.innerHTML = `<h2>Seu Arquétipo é: ${selectedArchetype}</h2>
+                                     <p>${description}</p>
+                                     <a href="#" style="display:inline-block; margin-top:10px; background:#8b5336; color:white; padding:10px 15px; border-radius:8px; text-decoration:none;">Ver peças do meu arquétipo</a>`;
+    }
+
+    showQuestion();
+</script>
+
+</body>
+</html>
