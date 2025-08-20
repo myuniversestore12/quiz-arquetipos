@@ -1,182 +1,219 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Arquétipos - My Universe Store</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f6f5f2;
-            color: #3e2723;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .quiz-container {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            max-width: 600px;
-            width: 100%;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-            color: #8b5336;
-        }
-        .question {
-            margin-bottom: 20px;
-        }
-        button {
-            background-color: #8b5336;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            margin-top: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #6f402a;
-        }
-        .result {
-            text-align: center;
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #f6f5f2;
-        }
-        .hidden {
-            display: none;
-        }
-        .option {
-            background: #f6f5f2;
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        .option:hover {
-            background: #eae6df;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz de Arquétipos - My Universe Store</title>
+  <style>
+    body { 
+        font-family: 'Georgia', serif; 
+        background: #f6f5f2; 
+        padding: 20px; 
+        color: #8b5336;
+    }
+    h1 { 
+        text-align: center; 
+        color: #8b5336; 
+        font-family: 'Georgia', serif; 
+    }
+    .question { 
+        margin: 30px auto; 
+        padding: 20px; 
+        background: #ffffff; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        max-width: 600px;
+    }
+    .options label {
+        display: block;
+        margin: 8px 0;
+        padding: 12px;
+        border: 2px solid #d9c3a7; 
+        border-radius: 8px; 
+        background: #f3ece4; 
+        color: #3e2f23;
+        font-size: 16px; 
+        font-family: 'Arial', sans-serif;
+        cursor: pointer; 
+        transition: all 0.3s ease;
+    }
+    .options label:hover { 
+        background: #e3d4c3; 
+        border-color: #c7a878;
+    }
+    button {
+        display: block;
+        width: 100%;
+        margin: 30px auto;
+        padding: 15px;
+        background: #c7a878;
+        color: white;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        max-width: 600px;
+    }
+    button:hover {
+        background: #a98965;
+    }
+    .result { 
+        margin-top: 40px; 
+        padding: 25px; 
+        background: #fff8f0; 
+        border-radius: 12px; 
+        max-width: 600px; 
+        margin-left: auto; 
+        margin-right: auto;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    a {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 20px;
+        background: #c7a878;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: background 0.3s ease;
+    }
+    a:hover {
+        background: #a98965;
+    }
+  </style>
 </head>
 <body>
 
-<div class="quiz-container">
-    <h1>Descubra seu Arquétipo</h1>
-    <div id="quiz"></div>
-    <div id="result" class="result hidden"></div>
-</div>
+<h1>Descubra seu Arquétipo</h1>
+
+<form id="quizForm"></form>
+
+<button type="button" onclick="calcularResultado()">Ver Resultado</button>
+
+<div id="result"></div>
 
 <script>
-    const questions = [
-        {
-            question: "O que te motiva a agir mesmo nos momentos mais difíceis?",
-            options: ["Amor e conexões", "Desejo de poder", "Busca por sabedoria"],
-            archetypes: ["Afrodite", "Cleópatra", "Atena"]
-        },
-        {
-            question: "Em um ambiente novo, qual é sua primeira reação?",
-            options: ["Fazer conexões", "Assumir a liderança", "Observar e analisar"],
-            archetypes: ["Afrodite", "Cleópatra", "Atena"]
-        },
-        {
-            question: "O que mais te faz sentir realizada?",
-            options: ["Viver intensamente o amor", "Conquistar e influenciar", "Aprender e compartilhar conhecimento"],
-            archetypes: ["Afrodite", "Cleópatra", "Atena"]
-        },
-        {
-            question: "Qual destas frases ressoa mais com você?",
-            options: ["O amor move o mundo", "O poder molda destinos", "O conhecimento é poder"],
-            archetypes: ["Afrodite", "Cleópatra", "Atena"]
-        },
-        {
-            question: "Como você lida com desafios inesperados?",
-            options: ["Com empatia", "Com estratégia", "Com lógica"],
-            archetypes: ["Afrodite", "Cleópatra", "Atena"]
-        },
-        {
-            question: "Se fosse uma personagem histórica, qual seria seu papel?",
-            options: ["Inspirar romances e artes", "Governar e liderar", "Descobrir e ensinar"],
-            archetypes: ["Afrodite", "Cleópatra", "Atena"]
-        },
-        {
-            question: "Qual qualidade as pessoas mais admiram em você?",
-            options: ["Sensibilidade", "Determinação", "Inteligência"],
-            archetypes: ["Afrodite", "Cleópatra", "Atena"]
-        }
-    ];
+// Perguntas originais
+const perguntas = [
+  {
+    texto: "O que te motiva a agir mesmo nos momentos mais difíceis?",
+    opcoes: [
+      { resp: "Atena", texto: "O desejo de inspirar e proteger quem amo" },
+      { resp: "Cleópatra", texto: "A necessidade de manter meu poder e influência" },
+      { resp: "Afrodite", texto: "A busca por experiências intensas e apaixonantes" }
+    ]
+  },
+  {
+    texto: "Em um ambiente novo, qual é sua primeira reação?",
+    opcoes: [
+      { resp: "Atena", texto: "Observar, analisar e entender as dinâmicas" },
+      { resp: "Afrodite", texto: "Criar conexões emocionais e relações marcantes" },
+      { resp: "Cleópatra", texto: "Assumir a liderança e chamar atenção" }
+    ]
+  },
+  {
+    texto: "O que mais te faz sentir realizada?",
+    opcoes: [
+      { resp: "Atena", texto: "Aprender algo novo e aplicar minha sabedoria" },
+      { resp: "Afrodite", texto: "Viver momentos de amor e conexão profunda" },
+      { resp: "Cleópatra", texto: "Ter o controle e conquistar minhas metas" }
+    ]
+  },
+  {
+    texto: "Qual destas frases ressoa mais com você?",
+    opcoes: [
+      { resp: "Cleópatra", texto: "O poder pertence a quem sabe usá-lo" },
+      { resp: "Atena", texto: "O conhecimento é a minha maior arma" },
+      { resp: "Afrodite", texto: "Meu coração guia minhas escolhas" }
+    ]
+  },
+  {
+    texto: "Como você lida com desafios inesperados?",
+    opcoes: [
+      { resp: "Afrodite", texto: "Seguindo minha intuição e adaptando-me com charme" },
+      { resp: "Cleópatra", texto: "Assumindo o controle e tomando decisões firmes" },
+      { resp: "Atena", texto: "Usando minha capacidade de pensar rápido e estrategicamente" }
+    ]
+  },
+  {
+    texto: "Se fosse uma personagem histórica, qual seria seu papel?",
+    opcoes: [
+      { resp: "Cleópatra", texto: "A rainha influente que move impérios" },
+      { resp: "Afrodite", texto: "A musa inspiradora que transforma corações" },
+      { resp: "Atena", texto: "A conselheira sábia que orienta grandes líderes" }
+    ]
+  },
+  {
+    texto: "Qual qualidade as pessoas mais admiram em você?",
+    opcoes: [
+      { resp: "Afrodite", texto: "Seu charme e capacidade de inspirar" },
+      { resp: "Atena", texto: "Sua sabedoria e bom senso" },
+      { resp: "Cleópatra", texto: "Sua força e determinação" }
+    ]
+  }
+];
 
-    function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
+// embaralhar array
+function embaralhar(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
 
-    let currentQuestion = 0;
-    let scores = { "Afrodite": 0, "Cleópatra": 0, "Atena": 0 };
+// montar quiz na tela
+const form = document.getElementById("quizForm");
+embaralhar(perguntas).forEach((pergunta, i) => {
+  const div = document.createElement("div");
+  div.className = "question";
+  div.innerHTML = `<h3>${pergunta.texto}</h3>`;
+  const optionsDiv = document.createElement("div");
+  optionsDiv.className = "options";
+  pergunta.opcoes.forEach(op => {
+    optionsDiv.innerHTML += `
+      <label><input type="radio" name="q${i}" value="${op.resp}"> ${op.texto}</label>
+    `;
+  });
+  div.appendChild(optionsDiv);
+  form.appendChild(div);
+});
 
-    const quizContainer = document.getElementById("quiz");
-    const resultContainer = document.getElementById("result");
+// calcular resultado
+function calcularResultado() {
+  let scores = { Afrodite: 0, Cleópatra: 0, Atena: 0 };
+  let dados = new FormData(form);
 
-    shuffle(questions);
+  if ([...dados.keys()].length < perguntas.length) {
+    alert("Responda todas as perguntas!");
+    return;
+  }
 
-    function showQuestion() {
-        const q = questions[currentQuestion];
-        quizContainer.innerHTML = `
-            <div class="question"><strong>${q.question}</strong></div>
-            ${q.options.map((opt, index) => `<div class="option" onclick="selectOption('${q.archetypes[index]}')">${opt}</div>`).join("")}
-        `;
-    }
+  for (let [, value] of dados) {
+    scores[value]++;
+  }
 
-    function selectOption(archetype) {
-        scores[archetype]++;
-        currentQuestion++;
-        if (currentQuestion < questions.length) {
-            showQuestion();
-        } else {
-            showResult();
-        }
-    }
+  let vencedor = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+  let descricoes = {
+    Afrodite: "Você é Afrodite: encantadora, movida pela paixão e pelo amor. Sua energia inspira e transforma tudo ao seu redor.",
+    Cleópatra: "Você é Cleópatra: poderosa, estratégica e magnética. Sua presença naturalmente assume o comando e gera respeito.",
+    Atena: "Você é Atena: sábia, racional e protetora. Sua força está na inteligência e na capacidade de guiar os outros."
+  };
+  let links = {
+    Afrodite: "#",
+    Cleópatra: "#",
+    Atena: "#"
+  };
 
-    function showResult() {
-        let highestScore = 0;
-        let selectedArchetype = "";
-        for (let archetype in scores) {
-            if (scores[archetype] > highestScore) {
-                highestScore = scores[archetype];
-                selectedArchetype = archetype;
-            }
-        }
-
-        let description = "";
-        if (selectedArchetype === "Afrodite") {
-            description = "Você é guiada pelo amor e pela beleza. Afrodite representa paixão, conexões profundas e intensidade emocional.";
-        } else if (selectedArchetype === "Cleópatra") {
-            description = "Você é estrategista e poderosa. Cleópatra simboliza liderança, influência e magnetismo pessoal.";
-        } else if (selectedArchetype === "Atena") {
-            description = "Você é sábia e justa. Atena representa inteligência, lógica e a busca por conhecimento.";
-        }
-
-        quizContainer.classList.add("hidden");
-        resultContainer.classList.remove("hidden");
-        resultContainer.innerHTML = `<h2>Seu Arquétipo é: ${selectedArchetype}</h2>
-                                     <p>${description}</p>
-                                     <a href="#" style="display:inline-block; margin-top:10px; background:#8b5336; color:white; padding:10px 15px; border-radius:8px; text-decoration:none;">Ver peças do meu arquétipo</a>`;
-    }
-
-    showQuestion();
+  document.getElementById("result").innerHTML = `
+    <div class="result">
+      <h2>${vencedor}</h2>
+      <p>${descricoes[vencedor]}</p>
+      <a href="${links[vencedor]}" target="_blank">Ver peças do meu arquétipo</a>
+    </div>
+  `;
+}
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
